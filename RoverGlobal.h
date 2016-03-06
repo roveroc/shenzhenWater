@@ -12,26 +12,36 @@
 #import "UserDefault.h"
 
 
+#define Global [RoverGlobal sharedInstance]
+
 //******************* ******************* *******************
 //判断iPhone4/iPhone4S
-#define iPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
+//#define iPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
+//
+////判断iPhone5/iPhone5S
+//#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+//
+////判断iPhone6
+////#define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+//
+////判断iPhone6Plus
+//#define iPhone6P ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(828, 1472), [[UIScreen mainScreen] currentMode].size) : NO)
+////******************* ******************* *******************
 
-//判断iPhone5/iPhone5S
-#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
 
-//判断iPhone6
-#define iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
 
-//判断iPhone6Plus
-#define iPhone6__ ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(828, 1472), [[UIScreen mainScreen] currentMode].size) : NO)
-//******************* ******************* *******************
 
 #define SENDPORT    5000                 //发送数据端口
 #define BroadCast   @"10.10.100.254"     //广播地址
-
 #define WAITTIME    1.0
-
 #define WIFISSID    @"LightFish-"
+
+typedef enum iPhone{
+    iPhone4 = 0,
+    iPhone5,
+    iPhone6,
+    iPhone6P,
+}iPhone;
 
 @interface RoverGlobal : NSObject{
     NSString       *selfIP;
@@ -58,6 +68,13 @@
     BOOL           isCloudy;
     
     BOOL           isClosed;        //设备是否关闭
+    
+    int            screenWidth;     //屏幕宽
+    int            screenHeigth;    //屏幕高
+    iPhone         iPhoneType;
+    
+    NSMutableArray *deviceNameArray;
+    NSMutableArray *deviceMACArray;
 }
 
 @property (nonatomic, retain) NSString       *selfIP;
@@ -82,7 +99,16 @@
 @property (assign)            BOOL           isCloudy;
 @property (assign)            BOOL           isClosed;
 
+@property (assign)            int            screenWidth;
+@property (assign)            int            screenHeigth;
+@property (assign)            iPhone         iPhoneType;
+
+@property (nonatomic, retain) NSMutableArray *deviceNameArray;
+@property (nonatomic, retain) NSMutableArray *deviceMACArray;
+
 + (RoverGlobal *)sharedInstance;
+
+- (NSString *)platform;
 
 -(NSString *)getSelfIPAddress;
 

@@ -12,6 +12,7 @@
 #import "ManualController.h"
 #import "LightingModeController.h"
 #import "CloudyModeController.h"
+#import "DeviceMannagerController.h"
 
 @interface MainController ()
 
@@ -104,9 +105,11 @@
     [RoverGlobal sharedInstance].selfIP = [[RoverGlobal sharedInstance] getSelfIPAddress];
     NSLog(@"本机IP --> %@",[RoverGlobal sharedInstance].selfIP);
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"Syn Time" style:UIBarButtonItemStyleDone target:self action:@selector(synchTime)];
+    //进入设备管理页，搜索设备、添加到路由器等功能
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"Device" style:UIBarButtonItemStyleDone target:self action:@selector(gotoDeviceManagerController)];
     self.navigationItem.rightBarButtonItem = rightItem;
     
+    //刷新读取设备时间
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"refresh" style:UIBarButtonItemStyleDone target:self action:@selector(refreshStatus)];
     self.navigationItem.leftBarButtonItem = leftItem;
     
@@ -125,6 +128,9 @@
     
     [RoverGlobal sharedInstance].selfIP = [[RoverGlobal sharedInstance] getSelfIPAddress];
     [self addMessageLabel];
+    
+    //每次软件启动时，自动同步时间至设备
+    
 }
 
 - (void)addMessageLabel{
@@ -253,14 +259,16 @@
 }
 
 
+#pragma mark - 进入设备管理页面
+- (void)gotoDeviceManagerController{
+    DeviceMannagerController *deviceCon = [[DeviceMannagerController alloc] init];
+    [self.navigationController pushViewController:deviceCon animated:YES];
+}
+
+
 #pragma mark - 同步时间
-- (void)synchTime{
-    [RoverGlobal sharedInstance].isSuccess = NO;
+- (void)syncDeviceTime{
     [self performSelector:@selector(confirmSuccess) withObject:nil afterDelay:1.0];
-    self.hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    self.hud.dimBackground = YES;
-    [self.hud hide:YES afterDelay:WAITTIME];
-    NSLog(@"同步时间");
     NSDateFormatter *dateFormatter1 =[[NSDateFormatter alloc] init];
     [dateFormatter1 setDateFormat:@"YYYY"];
     int yearstr = [[dateFormatter1 stringFromDate:[NSDate date]] intValue];
@@ -271,19 +279,6 @@
         yearstr = yearstr/16;
         i++;
     }
-//    bb[i] = yearstr;
-//    Byte yearbb2 = bb[2];
-//    Byte yearbb1 = bb[1]*16+bb[0];
-//    
-//    NSDateFormatter *dateFormatter2 =[[NSDateFormatter alloc] init];
-//    [dateFormatter2 setDateFormat:@"MM"];
-//    int monstr = [[dateFormatter2 stringFromDate:[NSDate date]] intValue];
-//    Byte monbb = monstr;
-//    
-//    NSDateFormatter *dateFormatter3 =[[NSDateFormatter alloc] init];
-//    [dateFormatter3 setDateFormat:@"dd"];
-//    int ddstr = [[dateFormatter3 stringFromDate:[NSDate date]] intValue];
-//    Byte ddbb = ddstr;
     
     NSDateFormatter *dateFormatter4 =[[NSDateFormatter alloc] init];
     [dateFormatter4 setDateFormat:@"HH"];
@@ -319,8 +314,6 @@
     NSData *data = [[NSData alloc] initWithBytes:b3 length:64];
     [[RoverGlobal sharedInstance] sendDataToDevice:BroadCast order:data tag:0];
 }
-
-
 
 
 

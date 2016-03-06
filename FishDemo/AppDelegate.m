@@ -63,8 +63,32 @@
     setCon.navigationItem.title = @"System";
     UINavigationController *setNav = [[UINavigationController alloc] initWithRootViewController:setCon];
     
-    NSArray *navArray = [[NSArray alloc] initWithObjects:mainNav,setNav, nil];
+    NSLog(@"[Global platform] = %@",[Global platform]);
+    if([[Global platform] rangeOfString:@"iPhone 4"].location != NSNotFound){
+        Global.screenWidth = 320;
+        Global.screenHeigth = 480;
+        Global.iPhoneType = iPhone4;
+    }
+    else if([[Global platform] rangeOfString:@"iPhone 5"].location != NSNotFound){
+        Global.screenWidth = 320;
+        Global.screenHeigth = 568;
+        Global.iPhoneType = iPhone5;
+    }
+    else if([[Global platform] rangeOfString:@"iPhone 6"].location != NSNotFound &&
+            [[Global platform] rangeOfString:@"Plus"].location == NSNotFound){
+        Global.screenWidth = 320;
+        Global.screenHeigth = 480;
+        Global.iPhoneType = iPhone6;
+    }
+    else if([[Global platform] rangeOfString:@"iPhone 6"].location != NSNotFound &&
+            [[Global platform] rangeOfString:@"Plus"].location != NSNotFound){
+        Global.screenWidth = 414;
+        Global.screenHeigth = 736;
+        Global.iPhoneType = iPhone6;
+    }
+
     
+    NSArray *navArray = [[NSArray alloc] initWithObjects:mainNav,setNav, nil];
     tabCon.viewControllers = navArray;
     self.window.rootViewController = tabCon;
     
