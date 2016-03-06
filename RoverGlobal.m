@@ -113,7 +113,7 @@
     return ssid;
 }
 
-#pragma mark - 计算校验和
+#pragma mark - 计算校验和 
 -(Byte)getChecksum:(Byte *)byte{
     Byte bb = 0x00;
     for(int i = 0;i<64;i++)
@@ -131,7 +131,7 @@
     AsyncUdpSocket * tmpSocket = [[AsyncUdpSocket alloc]initWithDelegate:self];
     self.udpSocket = tmpSocket;
     NSError * error = nil;
-    [self.udpSocket bindToPort:5000 error:&error];
+//    [self.udpSocket bindToPort:5000 error:&error];
     [self.udpSocket enableBroadcast:YES error:&error];
     [self.udpSocket receiveWithTimeout:-1 tag:0];
     
