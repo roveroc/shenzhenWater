@@ -10,6 +10,20 @@
 #import "MainController.h"
 #import "SettingController.h"
 
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_RETINA ([[UIScreen mainScreen] scale] >= 2.0)
+
+#define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
+#define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_MAX_LENGTH (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
+#define SCREEN_MIN_LENGTH (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+#define IS_IPHONE_4_OR_LESS (IS_IPHONE && SCREEN_MAX_LENGTH < 568.0)
+#define IS_IPHONE_5 (IS_IPHONE && SCREEN_MAX_LENGTH == 568.0)
+#define IS_IPHONE_6 (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
+#define IS_IPHONE_6P (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
+
 @interface AppDelegate ()
 
 @end
@@ -63,7 +77,7 @@
     setCon.navigationItem.title = @"System";
     UINavigationController *setNav = [[UINavigationController alloc] initWithRootViewController:setCon];
     
-    NSLog(@"[Global platform] = %@",[Global platform]);
+    NSLog(@"[Global platform] = %f",[[UIScreen mainScreen] bounds].size.height);
     if([[Global platform] rangeOfString:@"iPhone 4"].location != NSNotFound){
         Global.screenWidth = 320;
         Global.screenHeigth = 480;
@@ -76,7 +90,7 @@
     }
     else if([[Global platform] rangeOfString:@"iPhone 6"].location != NSNotFound &&
             [[Global platform] rangeOfString:@"Plus"].location == NSNotFound){
-        Global.screenWidth = 320;
+        Global.screenWidth = 320;//375
         Global.screenHeigth = 480;
         Global.iPhoneType = iPhone6;
     }
@@ -86,6 +100,7 @@
         Global.screenHeigth = 736;
         Global.iPhoneType = iPhone6;
     }
+             
 
     
     NSArray *navArray = [[NSArray alloc] initWithObjects:mainNav,setNav, nil];
